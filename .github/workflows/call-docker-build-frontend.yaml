@@ -1,0 +1,51 @@
+name: Build frontend
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'src/**'
+      - '.github/workflows/call-docker-build-frontend.yaml'
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - 'src/**'
+      - '.github/workflows/call-docker-build-frontend.yaml'
+
+jobs:
+  call-docker-build:
+
+    name: frontend Call Docker Build
+
+    uses: dockersamples/.github/.github/workflows/reusable-docker-build.yaml@main
+
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    
+    secrets:
+
+      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    with:
+      
+      dockerhub-enable: true
+      ghcr-enable: true
+
+
+      image-names: |
+        ghcr.io/KVARSHA3222/zelis-ideathon-frontend
+        dockeraminute/ideathon_frontend
+      
+      tag-rules: |
+        type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+        type=raw,value=before,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+        type=raw,value=after,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+        type=ref,event=pr
+      
+      context: src
+      
+      platforms: linux/amd64,linux/arm64,linux/arm/v7
