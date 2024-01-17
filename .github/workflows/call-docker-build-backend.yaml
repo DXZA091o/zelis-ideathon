@@ -1,1 +1,42 @@
+name: Build backend
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'node-postgres/backend/**'
+      - '.github/workflows/call-docker-build-backend.yaml'
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - 'worker/**'
+      - '.github/workflows/call-docker-build-backend.yaml'
 
+jobs:
+  call-docker-build:
+
+    name: Backend Call Docker Build
+
+    uses: dockersamples/.github/.github/workflows/reusable-docker-build.yaml@main
+
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write 
+    
+    secrets:
+      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    with:
+      dockerhub-enable: true
+      ghcr-enable: true
+      image-names: |
+        ghcr.io/KVARSHA3222/zelis-ideathon-backend
+        dockeraminute/ideathon_backend
+      tag-rules: |
+        type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+        type=ref,event=pr
+      context: ./node-postgres/
+      platforms: linux/amd64,linux/arm64,linux/arm/v7
