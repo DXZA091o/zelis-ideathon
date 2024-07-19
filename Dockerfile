@@ -4,7 +4,6 @@ COPY package*.json ./
 RUN npm install
 COPY ./ .
 
-
 FROM node:14
 WORKDIR /app
 COPY --from=builder /app .
