@@ -1,4 +1,5 @@
 name: Build frontend
+
 on:
   push:
     branches:
@@ -13,6 +14,8 @@ on:
       - 'src/**'
       - '.github/workflows/call-docker-build-frontend.yaml'
   workflow_dispatch:
+  repository_dispatch:
+    types: [workflow-dispatch]
 
 jobs:
   call-docker-build:
@@ -35,7 +38,6 @@ jobs:
       
       dockerhub-enable: true
       ghcr-enable: true
-
 
       image-names: |
         ghcr.io/KVARSHA3222/zelis-ideathon-frontend
