@@ -12,6 +12,7 @@ on:
     paths:
       - 'src/**'
       - '.github/workflows/call-docker-build-frontend.yaml'
+  workflow_dispatch:
 
 jobs:
   call-docker-build:
